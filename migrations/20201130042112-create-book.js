@@ -14,6 +14,9 @@ module.exports = {
       author: {
         type: Sequelize.STRING
       },
+      genre: {
+        type: Sequelize.STRING
+      },
       year: {
         type: Sequelize.INTEGER
       },
