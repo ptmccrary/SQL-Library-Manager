@@ -4,10 +4,26 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// Import sequelize from models/index.js
+const { sequelize } = require('./models');
+
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 
 var app = express();
+
+// Authenticate connection
+(async () => {
+  try {
+    await sequelize.authenticate();
+    console.log('Connection to the database successful!');
+
+    // Sync all tables
+    await sequelize.sync({ force: true }); // DROP TABLE IF EXISTS
+  } catch (err) {
+    console.log('Error connecting to the database: ', err);
+  }
+})();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
