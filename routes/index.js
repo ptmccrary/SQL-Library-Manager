@@ -22,7 +22,9 @@ router.get('/', asyncHandler(async (req, res) => {
 
 // Get Books
 router.get('/books', asyncHandler(async (req, res) => {
-  throw 500;
+  const err = new Error();
+  err.status = 500;
+  throw err;
   const books = await Book.findAll();
   res.json(books);
 }))

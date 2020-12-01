@@ -54,7 +54,7 @@ app.use((err, req, res, next) => {
     res.status(404).render('page-not-found', { err });
   } else {
     err.message = err.message || 'Oops! It looks like something went wrong on our end.';
-    res.status(500).render('error', { err });
+    res.status(err.status || 500).render('error', { err });
   }
 });
 
