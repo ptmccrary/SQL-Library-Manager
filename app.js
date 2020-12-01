@@ -19,7 +19,7 @@ var app = express();
     console.log('Connection to the database successful!');
 
     // Sync all tables
-    await sequelize.sync({ force: true }); // DROP TABLE IF EXISTS
+    await sequelize.sync(); // DROP TABLE IF EXISTS
   } catch (err) {
     console.log('Error connecting to the database: ', err);
   }
