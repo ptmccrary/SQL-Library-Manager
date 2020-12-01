@@ -53,9 +53,14 @@ router.post('/books/new', asyncHandler(async (req, res) => {
   let book;
   try {
     book = await Book.create(req.body);
-    res.redirect('/books');
-  } catch (err) {
-    sequelizeValidationHandler(err, 'new-book', 'New Book');
+    res.redirect('/');
+  } catch (error) {
+    if (error.name === "SequelizeValidationError") {
+      book = await Book.build(req.body);
+      res.render("new-book", {book, errors: error.errors, title: "New Book" })
+    } else {
+      throw error;
+    }
   }
 }));
 
@@ -80,8 +85,13 @@ router.post('/books/:id', asyncHandler(async (req, res) => {
     } else {
       errorHandler(404, `There is no book in our database that matches that ID.`);
     }
-  } catch(err) {
-    sequelizeValidationHandler(err, 'update-book', 'Update Book');
+  } catch(error) {
+    if (error.name === "SequelizeValidationError") {
+      book = await Book.build(req.body);
+      res.render("update-book", {book, errors: error.errors, title: "Update Book" })
+    } else {
+      throw error;
+    }
   }
 }));
 
