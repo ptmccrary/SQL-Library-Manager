@@ -22,16 +22,6 @@ function errorHandler(errStatus, msg) {
   throw err;
 };
 
-// Sequelize validation error handler
-async function sequelizeValidationHandler(err, route, title) {
-  if (err.name === 'SequelizeValidationError') {
-    book = await Book.build(req.body);
-    res.render(`${route}`, { book, errors: err.errors, title: `${title}` });
-  } else {
-    throw error;
-  }
-}
-
 // Get / - redirect to /books route
 router.get('/', asyncHandler(async (req, res) => {
   res.redirect('/books');
@@ -39,6 +29,7 @@ router.get('/', asyncHandler(async (req, res) => {
 
 // Get /books - shows full list of books
 router.get('/books', asyncHandler(async (req, res) => {
+  // SELECT * FROM Book
   const books = await Book.findAll();
   res.render('index', { books, title: 'Books' });
 }));
@@ -52,9 +43,11 @@ router.get('/books/new', (req, res) => {
 router.post('/books/new', asyncHandler(async (req, res) => {
   let book;
   try {
+    // Create new book
     book = await Book.create(req.body);
     res.redirect('/');
   } catch (error) {
+    // Empty field handler
     if (error.name === "SequelizeValidationError") {
       book = await Book.build(req.body);
       res.render("new-book", {book, errors: error.errors, title: "New Book" })
@@ -66,7 +59,9 @@ router.post('/books/new', asyncHandler(async (req, res) => {
 
 // Get /books/:id - shows book detail form
 router.get('/books/:id', asyncHandler(async (req, res) => {
+  // Get unique book
   const book = await Book.findByPk(req.params.id);
+  // Unmatched book handler
   if(book) {
     res.render('update-book', { book, title: 'UpdateBook' });
   } else {
@@ -78,6 +73,7 @@ router.get('/books/:id', asyncHandler(async (req, res) => {
 router.post('/books/:id', asyncHandler(async (req, res) => {
   let book;
   try {
+    // Update book contents if exists
     book = await Book.findByPk(req.params.id);
     if(book) {
       await book.update(req.body);
@@ -86,6 +82,7 @@ router.post('/books/:id', asyncHandler(async (req, res) => {
       errorHandler(404, `There is no book in our database that matches that ID.`);
     }
   } catch(error) {
+    // Empty field handler
     if (error.name === "SequelizeValidationError") {
       book = await Book.build(req.body);
       res.render("update-book", {book, errors: error.errors, title: "Update Book" })
@@ -100,6 +97,7 @@ router.post('/books/:id', asyncHandler(async (req, res) => {
 */
 router.post('/books/:id/delete', asyncHandler(async (req, res) => {
   const book = await Book.findByPk(req.params.id);
+  // Delete book if exists
   if(book) {
     await book.destroy(req.body);
     res.redirect('/books');

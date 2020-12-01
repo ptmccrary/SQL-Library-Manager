@@ -19,8 +19,9 @@ var app = express();
     console.log('Connection to the database successful!');
 
     // Sync all tables
-    await sequelize.sync(); // DROP TABLE IF EXISTS
+    await sequelize.sync();
   } catch (err) {
+    // Database connection error
     console.log('Error connecting to the database: ', err);
   }
 })();

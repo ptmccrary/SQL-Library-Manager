@@ -13,7 +13,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
   };
+
+  // Create book table
   Book.init({
+    // Title row
     title: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -26,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     },
+    // Author row
     author: {
       type: DataTypes.STRING,
       allowNull: false,
@@ -38,8 +42,11 @@ module.exports = (sequelize, DataTypes) => {
         }
       },
     },
+    // Genre row
     genre: DataTypes.STRING,
+    // Year row
     year: DataTypes.INTEGER
+    /** Table will also have createdAt and updatedAt rows **/
   }, {
     sequelize,
     modelName: 'Book',
