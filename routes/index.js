@@ -10,7 +10,7 @@ function asyncHandler(cb) {
     try {
       await cb(req, res, next);
     } catch(err) {
-      res.status(500).send(err);
+      next(err);
     }
   }
 }
@@ -22,8 +22,9 @@ router.get('/', asyncHandler(async (req, res) => {
 
 // Get Books
 router.get('/books', asyncHandler(async (req, res) => {
+  throw 500;
   const books = await Book.findAll();
-  res.json(books)
+  res.json(books);
 }))
 
 module.exports = router;
